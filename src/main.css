@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
+  zoom: 125%;
+  background-color: black;
+  filter: invert(90%) hue-rotate(180deg);
+}
+
+/* .loading{} */
+
+.bus-list {
+  margin: 0;
+  padding: 2em 1em;
+}
+
+
+.bus-list-row {
+  display: grid;
+  grid-template-columns: 2em 5em 7em 1fr;
+  margin-bottom: 1em;
+  white-space: nowrap;
+}
+
+/* .bus-list-col {} */
+.bus-list-col.bus-number {
+  font-weight: bold
+}
+/* .bus-list-col.bus-arrival-time {} */
+/* .bus-list-col.bus-arrival-time-relative {} */
+.bus-list-col.bus-destination {
+  font-size: 0.9em;
+}
