@@ -8,8 +8,8 @@
   ],
   "dependencies": {
     "date-fns": "^2.0.0-alpha.27",
-    "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
+    "randomcolor": "^0.5.3",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
     "react-router-dom": "^4.3.1",

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import format from "date-fns/format";
 import formatDistanceStrict from "date-fns/formatDistanceStrict";
 import isAfter from "date-fns/isAfter";
-import Please from "pleasejs";
+import randomColor from "randomcolor";
 
 import BusStopStore from "../stores/BusStopStore";
 
@@ -43,7 +43,7 @@ export default function BusStopMonitor({ match }) {
 
   return (
     <IncomingBusList
-      buses={buses.filter(bus => isAfter(bus.expectedarrivaltime * 1000, now))}
+      buses={buses.filter(bus => isAfter(bus.expecteddeparturetime * 1000, now))}
       now={now}
     />
   );
@@ -73,26 +73,22 @@ IncomingBusList.propTypes = {
 };
 
 function IncomingBus({ bus, now = new Date() }) {
-  function makeColor(seed) {
-    return Please.make_color({
-      seed,
-      saturation: 1,
-      value: 0.7
-    });
-  }
+  const departureTime = bus.expecteddeparturetime * 1000;
+
+  const lineColor = randomColor({
+    seed: bus.lineref + bus.destinationdisplay,
+    luminosity: "dark",
+    hue: "random"
+  });
 
   return (
     <div className="bus-list-row">
-      <span
-        className="bus-list-col bus-number"
-        style={{ color: makeColor(bus.lineref + bus.destinationref + bus.originref) }}>
+      <span className="bus-list-col bus-number" style={{ color: lineColor }}>
         {bus.lineref}
       </span>
-      <span className="bus-list-col bus-arrival-time">
-        {format(bus.expectedarrivaltime * 1000, "kk:mm:ss")}
-      </span>
-      <span className="bus-list-col bus-arrival-time-relative">
-        {formatDistanceStrict(bus.expectedarrivaltime * 1000, now, {
+      <span className="bus-list-col bus-departure-time">{format(departureTime, "kk:mm:ss")}</span>
+      <span className="bus-list-col bus-departure-time-distance">
+        {formatDistanceStrict(departureTime, now, {
           addSuffix: true
         })}
       </span>

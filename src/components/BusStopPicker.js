@@ -42,7 +42,7 @@ export default function BusStopPicker({ history, match }) {
         Promise.resolve(
           stops.filter(o => {
             return (
-              o.stop_code.indexOf(inputValue) !== -1 ||
+              o.stop_code.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1 ||
               o.stop_name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
             );
           })
