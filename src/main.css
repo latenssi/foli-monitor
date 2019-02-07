@@ -19,6 +19,8 @@ body {
   grid-template-columns: 2em 5em 7em 1fr;
   margin-bottom: 1em;
   white-space: nowrap;
+  overflow: scroll;
+  padding-bottom: .4em;
 }
 
 .bus-number {
