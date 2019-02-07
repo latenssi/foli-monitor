@@ -13,4 +13,6 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 
+COPY nginx/nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
