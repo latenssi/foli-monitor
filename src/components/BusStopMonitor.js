@@ -46,15 +46,17 @@ BusStopMonitor.propTypes = {
 
 function IncomingBusList({ buses = [], now = new Date() }) {
   return (
-    <div className="bus-list">
-      {buses.map(bus => (
-        <IncomingBus
-          bus={bus}
-          now={now}
-          key={`${bus.lineref}-${bus.originref}-${bus.originaimeddeparturetime}`}
-        />
-      ))}
-    </div>
+    <table className="bus-list">
+      <tbody>
+        {buses.map(bus => (
+          <IncomingBus
+            bus={bus}
+            now={now}
+            key={`${bus.lineref}-${bus.originref}-${bus.originaimeddeparturetime}`}
+          />
+        ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -73,18 +75,16 @@ function IncomingBus({ bus, now = new Date() }) {
   });
 
   return (
-    <div className="bus-list-row">
-      <span className="bus-list-col bus-number" style={{ color: lineColor }}>
+    <tr className="bus-list-row">
+      <td className="bus-list-col bus-number" style={{ color: lineColor }}>
         {bus.lineref}
-      </span>
-      <span className="bus-list-col bus-departure-time">{format(departureTime, "kk:mm:ss")}</span>
-      <span className="bus-list-col bus-departure-time-distance">
-        {formatDistanceStrict(departureTime, now, {
-          addSuffix: true
-        })}
-      </span>
-      <span className="bus-list-col bus-destination">{bus.destinationdisplay}</span>
-    </div>
+      </td>
+      <td className="bus-list-col bus-destination">{bus.destinationdisplay}</td>
+      <td className="bus-list-col bus-departure-time-distance">
+        {formatDistanceStrict(departureTime, now)}
+      </td>
+      <td className="bus-list-col bus-departure-time">{format(departureTime, "kk:mm")}</td>
+    </tr>
   );
 }
 
