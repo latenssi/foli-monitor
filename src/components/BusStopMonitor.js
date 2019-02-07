@@ -13,21 +13,13 @@ export default function BusStopMonitor({ match }) {
   const [buses, setBuses] = useState([]);
   const [now, setNow] = useState(new Date());
 
-  let isMounted = true;
   let refreshIntervalId;
   let nowIntervalId;
 
   const stopId = match.params.stopId;
 
   function getIncomingBuses(id) {
-    BusStopStore.getIncomingBuses(id)
-      .then(buses => {
-        if (isMounted) setBuses(buses);
-      })
-      .catch(e => {
-        console.error(e); // eslint-disable-line no-console
-        if (isMounted) setBuses([]);
-      });
+    BusStopStore.getIncomingBuses(id).then(setBuses);
   }
 
   useEffect(() => {
@@ -35,7 +27,6 @@ export default function BusStopMonitor({ match }) {
     refreshIntervalId = setInterval(() => getIncomingBuses(stopId), 60 * 1000);
     nowIntervalId = setInterval(() => setNow(new Date()), 1000);
     return () => {
-      isMounted = false;
       clearInterval(refreshIntervalId);
       clearInterval(nowIntervalId);
     };

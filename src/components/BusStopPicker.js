@@ -4,50 +4,41 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Async from "react-select/lib/Async";
 
+import usePosition from "./usePosition";
 import BusStopStore from "../stores/BusStopStore";
 
 export default function BusStopPicker({ history, match }) {
-  const [stops, setStops] = useState([]);
+  const [nearbyStops, setNearbyStops] = useState([]);
+  const [selectedStop, setSelectedStop] = useState(null);
+  const [query, setQuery] = useState("");
 
-  let isMounted = true;
+  const position = usePosition();
 
   const { stopId: selectedStopId = null } = match.params;
 
-  useEffect(getStops, [selectedStopId]);
+  useEffect(() => {
+    BusStopStore.getStopByCode(selectedStopId).then(setSelectedStop);
+  }, [selectedStopId]);
 
-  function getStops() {
-    BusStopStore.getStops().then(stops => {
-      if (isMounted) setStops(Object.values(stops));
-    });
-    return () => {
-      isMounted = false;
-    };
-  }
-
-  function handleChange(selectedOption) {
-    history.push("/stop/" + selectedOption.stop_code);
-  }
-
-  const defaultOptions = stops.slice(0, 10);
+  useEffect(() => {
+    if (position) {
+      BusStopStore.getStopsNearPosition({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude
+      }).then(setNearbyStops);
+    }
+  }, [position]);
 
   return (
     <Async
-      value={stops.find(o => o.stop_code === selectedStopId)}
-      onChange={handleChange}
+      value={selectedStop}
+      inputValue={query}
+      onChange={value => history.push("/stop/" + value.stop_code)}
+      onInputChange={input => setQuery(input)}
       getOptionLabel={opt => `${opt.stop_code} - ${opt.stop_name}`}
       getOptionValue={opt => opt.stop_code}
-      cacheOptions
-      defaultOptions={defaultOptions}
-      loadOptions={inputValue =>
-        Promise.resolve(
-          stops.filter(o => {
-            return (
-              o.stop_code.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1 ||
-              o.stop_name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
-            );
-          })
-        )
-      }
+      defaultOptions={nearbyStops}
+      loadOptions={BusStopStore.searchStops}
     />
   );
 }
