@@ -6,11 +6,25 @@ import { distance } from "../utils/position-utils";
 let getStopsPromise;
 
 async function getIncomingBuses(stopId) {
-  return api.getIncomingBuses(stopId).then(data => data.result);
+  return api.getIncomingBuses(stopId).then(
+    data => data.result,
+    err => {
+      // eslint-disable-next-line no-console
+      console.error(err.message);
+      return [];
+    }
+  );
 }
 
 function getStops() {
-  getStopsPromise = getStopsPromise || api.getStops();
+  getStopsPromise =
+    getStopsPromise ||
+    api.getStops().catch(err => {
+      // eslint-disable-next-line no-console
+      console.error(err.message);
+      getStopsPromise = null;
+      return {};
+    });
   return getStopsPromise;
 }
 
