@@ -13,9 +13,6 @@ export default function BusStopMonitor({ match }) {
   const [buses, setBuses] = useState([]);
   const [now, setNow] = useState(new Date());
 
-  let refreshIntervalId;
-  let nowIntervalId;
-
   const stopId = match.params.stopId;
 
   function getIncomingBuses(id) {
@@ -24,8 +21,8 @@ export default function BusStopMonitor({ match }) {
 
   useEffect(() => {
     getIncomingBuses(stopId);
-    refreshIntervalId = setInterval(() => getIncomingBuses(stopId), 60 * 1000);
-    nowIntervalId = setInterval(() => setNow(new Date()), 1000);
+    const refreshIntervalId = setInterval(() => getIncomingBuses(stopId), 60 * 1000);
+    const nowIntervalId = setInterval(() => setNow(new Date()), 1000);
     return () => {
       clearInterval(refreshIntervalId);
       clearInterval(nowIntervalId);

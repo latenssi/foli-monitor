@@ -1,34 +1,20 @@
 "use strict";
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { render } from "react-dom";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-const BusStopMonitor = React.lazy(() => import("./components/BusStopMonitor"));
-const BusStopPicker = React.lazy(() => import("./components/BusStopPicker"));
-
-function asFunction(Component) {
-  // eslint-disable-next-line react/display-name
-  return props => <Component {...props} />;
-}
-
-function Loading() {
-  return <div className="loading">Loading...</div>;
-}
+const BusStopMonitor = lazy(() => import("./components/BusStopMonitor"));
+const BusStopPicker = lazy(() => import("./components/BusStopPicker"));
 
 function App() {
   return (
-    <React.Suspense fallback={<Loading />}>
+    <Suspense fallback={<div className="loading">Loading...</div>}>
       <Router>
-        <>
-          <Switch>
-            <Route path="/stop/:stopId" component={asFunction(BusStopPicker)} />
-            <Route component={asFunction(BusStopPicker)} />
-          </Switch>
-          <Route path="/stop/:stopId" component={asFunction(BusStopMonitor)} />
-        </>
+        <Route path="(/stop/:stopId)?" component={BusStopPicker} />
+        <Route path="/stop/:stopId" component={BusStopMonitor} />
       </Router>
-    </React.Suspense>
+    </Suspense>
   );
 }
 
